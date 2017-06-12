@@ -1,0 +1,100 @@
+//@import '~bulma';
+
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+}
+.draggable {
+    position : absolute;
+    left : 0;
+    top : 0;
+}
+.handle {
+    cursor: move;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.canvas {
+    position: relative;
+    float:left;
+    width: 100%;
+    height: 100vh;
+    background-color: #3c464c;
+    overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);
+    background-size: 40px 40px;
+}
+.controls {
+    position: absolute;
+    right: 0;
+    width: 20%;
+    height: 100vh;
+    background-color: #3e3e3e;
+    z-index: 9999;
+}
+.node {
+    font-family: 'PT Mono', 'Andale Mono', 'Fira mono', 'Menlo', sans-serif;
+    color: #111;
+    font-size: 0.7em;
+    word-break: break-all;
+    background-color: #50607e;
+    box-shadow: -1px 5px 13px 1px rgba(30,30,30,0.8);
+    border-color: rgba(255,255,255,0.4);
+    border-width: 1px;
+    border-radius: 2px 2px 0 0;
+}
+.node .close {
+    position: absolute;
+    right: 2%;
+}
+.node .close:hover {
+    color: #CCC;
+    cursor: pointer;
+}
+.node .title {
+    width: 100%;
+    height: 20%;
+    background-color: #617b79;
+    padding: 5px;
+}
+.node .body {
+    height: 80%;
+    margin: 5px;
+    min-height: 80px;
+    color: #CCC;
+}
+.input, .output {
+    position: absolute;
+}
+.input {
+    margin-right: 5px;
+}
+.output {
+    margin-left: 5px;
+}
+.input .connect, .output .connect {
+    border-radius: 3px;
+    background-color: red;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+}
+.patch {
+   height: 2px;
+   background-color: #CCC;
+   border: none;
+   margin: 0;
+}
+#playground {
+    position: relative;
+}
