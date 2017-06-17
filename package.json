@@ -3,7 +3,6 @@
   "description": "Patches",
   "dependencies": {
     "axios": "^0.16.1",
-    "bulma": "^0.4.2",
     "immutable": "^3.8.1",
     "prop-types": "^15.5.10",
     "react": "^15.5.3",

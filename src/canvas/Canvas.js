@@ -13,46 +13,41 @@ const Connection = ({connection}) => {
     let x2 = end.get('left');
     let y1 = start.get('top');
     let y2 = end.get('top');
-    if (x2 < x1) {
-        let temp = x1;
-        x1 = x2;
-        x2 = temp;
-        temp = y1;
-        y1 = y2;
-        y2 = temp;
-    }
 
-    let length = Math.sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
-    let angle = Math.atan2(y2 - y1, x2 - x1);
-    let top = y1 + 0.5 * length * Math.sin(angle) + "px";
-    let left = x1 - 0.5 * length * (1 - Math.cos(angle)) + "px";
-    const style = {
-        position: "absolute",
-        width: length,
-        top: top,
-        left: left,
-        transform: `rotate(${angle}rad)`
-    };
+    function bezierByH(x0, y0, x1, y1) {
+        const mx = x0 + (x1 - x0) / 2;
+
+        return `M${x0} ${y0} C${mx} ${y0} ${mx} ${y1} ${x1} ${y1}`;
+    }
     return (
-        <hr className="patch" style={style}/>
+        <path
+            d={bezierByH(x1,y1,x2,y2)}
+            fill="transparent" stroke="lightgray" stroke-width="10"/>
     );
 };
 
 
-const Canvas = ({nodes}) => (
+const Canvas = ({nodes, xpos, ypos, scale}) => (
     <div className="canvas">
-        {nodes.map((node) => {
-            let connected = node.get('connected');
-            if (node.has('tempConnect')) {
-                connected = connected.push(node.get('tempConnect'));
-            }
-            return connected.map((connection, index) =>
-                <Connection connection={connection} key={index}/>
+        <svg
+            width="100%" height="100%"
+
+            xmlns="http://www.w3.org/2000/svg">
+            {nodes.map((node) => {
+                    let connected = node.get('connected');
+                    if (node.has('tempConnect')) {
+                        connected = connected.push(node.get('tempConnect'));
+                    }
+                    return connected.map((connection, index) =>
+                        <Connection connection={connection} key={index}/>
+                    )
+                }
             )}
-        )}
-        {nodes.map((node) =>
-            <Node node={node} key={node.get('id')}/>
-        )}
+            {nodes.map((node) =>
+                <Node node={node} key={node.get('id')}/>
+            )}
+
+        </svg>
         <Controls />
     </div>
 );
@@ -64,6 +59,9 @@ Canvas.propTypes = {
 
 function mapStateToProps(state) {
     return {
+        xpos: state.getIn(['canvas', 'xpos']),
+        ypos: state.getIn(['canvas', 'ypos']),
+        scale: state.getIn(['canvas', 'scale']),
         nodes: state.get('nodes'),
         patches: state.get('patches'),
     };

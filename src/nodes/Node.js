@@ -14,45 +14,78 @@ const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) =
     const width = node.get('width');
     const height = node.get('height');
     const id = node.get('id');
-    const style = {transform: `translate(${left}px, ${top}px)`, height: `${height}px`};
+    const transform = `translate(${left}, ${top})`;
     const inputCount = inputs.size;
     const outputCount = outputs.size;
     const bodyText = body(inputs, outputs);
     return (
-        <div className="node draggable" style={style}>
+        <g transform={transform} className="node draggable">
+            <rect
+                className="body"
+                x="0"
+                y="0"
+                width={width}
+                height={height}></rect>
+            <rect
+                className="handle title"
+                x="0"
+                y="0"
+                width={width}
+                height={height * 0.2}
+                onMouseDown={(e) => nodeDragStart(id, e.pageX, e.pageY)}></rect>
+            {/* mouseDown might cause an ordering change, so `onClick` would be unreliable here */}
+            <text
+                x={width - 2}
+                y="2"
+                className="close"
+                alignmentBaseline="hanging"
+                textAnchor="end"
+                onMouseUp={() => removeNode(id)}>
+                ✕
+            </text>
+            <text
+                x="0"
+                y="0"
+                alignmentBaseline="hanging">{title}</text>
+            <text
+                className="body"
+                alignmentBaseline="hanging"
+                y={height * 0.2}>{bodyText}</text>
             {inputs.map((input, index) =>
-                <div className="input"
-                     style={{transform: `translate(${input.get('offsetLeft')}px, ${input.get('offsetTop')}px)`}}
-                     key={input.get('title')}>
-                         <span
-                             className="connect"
-                             onMouseUp={(e) =>
-                                 connectAttempt(id, input.get('id'), e.pageX, e.pageY)}
-                         ></span>
-                        {input.get('title')}
-                </div>
+                <g fill="red" key={input.get('id')}>
+                    <circle className="input"
+                            cx={ input.get('offsetLeft')}
+                            cy={input.get('offsetTop')}
+                            r="4"
+                            key={input.get('title')}
+                            onMouseUp={(e) =>
+                                connectAttempt(id, input.get('id'), e.pageX, e.pageY)}>
+
+                    </circle>
+                    <text
+                        x={input.get('offsetLeft') + 5}
+                        y={input.get('offsetTop')}
+                    >{input.get('title')}</text>
+                </g>
             )}
             {outputs.map((output, index) =>
-                <div className="output"
-                     style={{transform: `translate(${output.get('offsetLeft')}px, ${output.get('offsetTop')}px)`}}
-                     key={output.get('title')}>
-                        <span
-                            className="connect"
+                <g fill="red" key={output.get('id')}>
+                    <circle className="output"
+                            cx={ output.get('offsetLeft')}
+                            cy={ output.get('offsetTop')}
+                            r="4"
+                            key={output.get('title')}
                             onMouseDown={(e) =>
-                                connectStart(id, output.get('id'), e.pageX, e.pageY)}
-                        ></span>
-                        {output.get('title')}
-                </div>
+                                connectStart(id, output.get('id'), e.pageX, e.pageY)}>
+                    </circle>
+                    <text
+                        x={output.get('offsetLeft') - 5}
+                        y={output.get('offsetTop')}
+                        textAnchor="end"
+                    >{output.get('title')}</text>
+                </g>
             )}
-            <div className="handle title" onMouseDown={(e)=>nodeDragStart(id, e.pageX, e.pageY)}>
-                {/* mouseDown might cause an ordering change, so `onClick` would be unreliable here */}
-                <div className="close" onMouseUp={()=>removeNode(id)}>✕</div>
-                {title}
-            </div>
-            <div className="body" style={{width: `${width}px`}}>
-                {bodyText}
-            </div>
-        </div>
+        </g>
     );
 };
 
