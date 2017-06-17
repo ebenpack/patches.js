@@ -21,8 +21,9 @@ const Connection = ({connection}) => {
     }
     return (
         <path
+            className="patch"
             d={bezierByH(x1,y1,x2,y2)}
-            fill="transparent" stroke="lightgray" stroke-width="10"/>
+            strokeWidth="4"/>
     );
 };
 

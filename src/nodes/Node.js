@@ -42,6 +42,7 @@ const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) =
                 ✕
             </text>
             <text
+                className="title"
                 x="0"
                 y="0"
                 alignmentBaseline="hanging">{title}</text>
@@ -50,14 +51,14 @@ const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) =
                 alignmentBaseline="hanging"
                 y={height * 0.2}>{bodyText}</text>
             {inputs.map((input, index) =>
-                <g fill="red" key={input.get('id')}>
-                    <circle className="input"
-                            cx={ input.get('offsetLeft')}
-                            cy={input.get('offsetTop')}
-                            r="4"
-                            key={input.get('title')}
-                            onMouseUp={(e) =>
-                                connectAttempt(id, input.get('id'), e.pageX, e.pageY)}>
+                <g className="input" key={input.get('id')}>
+                    <circle
+                        cx={ input.get('offsetLeft')}
+                        cy={input.get('offsetTop')}
+                        r="4"
+                        key={input.get('title')}
+                        onMouseUp={(e) =>
+                            connectAttempt(id, input.get('id'), e.pageX, e.pageY)}>
 
                     </circle>
                     <text
@@ -67,14 +68,14 @@ const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) =
                 </g>
             )}
             {outputs.map((output, index) =>
-                <g fill="red" key={output.get('id')}>
-                    <circle className="output"
-                            cx={ output.get('offsetLeft')}
-                            cy={ output.get('offsetTop')}
-                            r="4"
-                            key={output.get('title')}
-                            onMouseDown={(e) =>
-                                connectStart(id, output.get('id'), e.pageX, e.pageY)}>
+                <g className="output" key={output.get('id')}>
+                    <circle
+                        cx={ output.get('offsetLeft')}
+                        cy={ output.get('offsetTop')}
+                        r="4"
+                        key={output.get('title')}
+                        onMouseDown={(e) =>
+                            connectStart(id, output.get('id'), e.pageX, e.pageY)}>
                     </circle>
                     <text
                         x={output.get('offsetLeft') - 5}
