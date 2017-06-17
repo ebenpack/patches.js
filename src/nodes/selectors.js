@@ -14,17 +14,5 @@ export const getNodePath = (state, nodeId) => {
 };
 
 export const getIOPath = (state, nodeId, IOId, path) => {
-    let IOPath = null;
-    const index = getIndex(state, nodeId);
-    if (index < 0) {
-        return IOPath;
-    } else {
-        let IOIndex = getIndex(state.getIn([index, path]), IOId);
-        if (IOIndex < 0) {
-            return IOPath;
-        } else {
-            IOPath = [index, path, IOIndex];
-            return IOPath;
-        }
-    }
+    return [index, path, IOIndex];
 };

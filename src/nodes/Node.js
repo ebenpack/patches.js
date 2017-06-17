@@ -15,8 +15,6 @@ const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) =
     const height = node.get('height');
     const id = node.get('id');
     const transform = `translate(${left}, ${top})`;
-    const inputCount = inputs.size;
-    const outputCount = outputs.size;
     const bodyText = body(inputs, outputs);
     return (
         <g transform={transform} className="node draggable">

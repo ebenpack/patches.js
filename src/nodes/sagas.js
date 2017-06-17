@@ -1,4 +1,4 @@
-import {Set, List} from 'immutable';
+import {Set, List, OrderedMap} from 'immutable';
 import {eventChannel, delay, END} from 'redux-saga';
 import {put, call, take, fork, race, select, cancel} from 'redux-saga/effects';
 import {
@@ -6,7 +6,6 @@ import {
     addNodeToStore, nodeDragEnd, nodeDrag, moveNodeToTop, updateIO, broadcast, removeNodeFromStore,
     addConnectionToStore, connectEnd, connectDrag
 } from './actions';
-import {getIndex, getIOPath} from './selectors';
 import {uuid} from '../utils';
 
 export const createMouseChannel = () =>
@@ -84,9 +83,9 @@ function* watchDrag() {
                         let toIOId = attempt.inputId;
                         let nodes = yield select((store) => store.get('nodes'));
                         let output = yield select((store)=>
-                            nodes.getIn(getIOPath(store.get('nodes'), fromNodeId, fromIOId, 'outputs')));
+                            nodes.getIn([fromNodeId, 'outputs', fromIOId,]));
                         let input = yield select((store)=>
-                            nodes.getIn(getIOPath(store.get('nodes'), toNodeId, toIOId, 'inputs')));
+                            nodes.getIn([toNodeId, 'inputs', toIOId]));
                         if (input.get('type') === output.get('type')) {
                             yield put(addConnectionToStore(toNodeId, toIOId, fromNodeId, fromIOId));
                         }
@@ -120,22 +119,27 @@ function* watchAdd() {
             let {node} = add;
             let id = yield call(uuid);
             node = node.set('id', id);
+            let inputs = OrderedMap();
             for (let i = 0; i < node.get('inputs').size; i++) {
-                node = node.setIn(['inputs', i, 'id'], yield call(uuid));
-                node = node.setIn(
-                    ['inputs', i, 'offsetTop'],
+                let id = yield call(uuid);
+                let input = node.getIn(['inputs', i]);
+                input = input.set('id', id).set('offsetTop',
                     calculateTopOffset(node.get('height'), 0.8, node.get('inputs').size, i)
-                );
-                node = node.setIn(['inputs', i, 'offsetLeft'], 0);
+                ).set('offsetLeft', 0);
+                inputs = inputs.set(id, input);
             }
+            node = node.set('inputs', inputs);
+            let outputs = OrderedMap();
             for (let i = 0; i < node.get('outputs').size; i++) {
-                node = node.setIn(['outputs', i, 'id'], yield call(uuid));
-                node = node.setIn(
-                    ['outputs', i, 'offsetTop'],
+                let output = node.getIn(['outputs', i]);
+                let id = yield call(uuid);
+                output = output.set('id', id)
+                    .set('offsetTop',
                     calculateTopOffset(node.get('height'), 0.8, node.get('outputs').size, i)
-                );
-                node = node.setIn(['outputs', i, 'offsetLeft'], node.get('width'));
+                ).set('offsetLeft', node.get('width'));
+                outputs = outputs.set(id, output)
             }
+            node = node.set('outputs', outputs);
             node = node.set('left', 0).set('top', 0).set('connections', Set()).set('connected', List());
             yield put(addNodeToStore(node));
 

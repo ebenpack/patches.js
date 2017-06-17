@@ -31,7 +31,6 @@ const Canvas = ({nodes, xpos, ypos, scale}) => (
     <div className="canvas">
         <svg
             width="100%" height="100%"
-
             xmlns="http://www.w3.org/2000/svg">
             {nodes.map((node) => {
                     let connected = node.get('connected');

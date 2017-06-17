@@ -10,11 +10,11 @@ import {
 import {getIndex} from './selectors';
 
 
-function* listenHelper(id, selector, update, input){
+function* listenHelper(id, selector, update, input) {
     let self = yield(select(selector));
     let receivers = (self.getIn(['connected'])
         .filter((connected) => connected.get('fromNodeId') === input.fromNodeId)).toList();
-    for (let i=0; i< receivers.size; i++) {
+    for (let i = 0; i < receivers.size; i++) {
         yield put(update(receivers.getIn([i, 'toNodeId']), receivers.getIn([i, 'toIOId']), 'inputs', input.value));
         yield put(updateNode(id));
     }
@@ -22,12 +22,13 @@ function* listenHelper(id, selector, update, input){
 
 
 const createSagas = (id, selector, update, broadcast) => fromJS({
-    listen: function *(){
+    listen: function *() {
         yield takeEvery(NODE_BROADCAST, listenHelper, id, selector, update);
     },
 });
 
-
+const getIOByTitle = (IO, title) =>
+    IO.find((io) => io.get('title') === title);
 
 export default fromJS({
     groups: [
@@ -40,16 +41,17 @@ export default fromJS({
                 {
                     title: 'Sum',
                     body: (inputs, outputs) =>
-                        `∑(${inputs.getIn([0, 'value'])}, ${inputs.getIn([1, 'value'])} = ${outputs.getIn([0, 'value'])})`,
+                        `∑(${inputs.map((input) => input.get('value')).join(', ')} = ${outputs.reduce((acc, input) => acc + input.get('value'), 0)})`,
                     events: (id, selector, update, broadcast) => createSagas(id, selector, update, broadcast)
-                        .set('update', function* (){
+                        .set('update', function*() {
                             while (true) {
                                 let {nodeId} = yield take(NODE_UPDATE);
                                 if (nodeId === id) {
                                     let self = yield select(selector);
-                                    let left = self.getIn(['inputs', 0, 'value']);
-                                    let right = self.getIn(['inputs', 1, 'value']);
-                                    let outputId = self.getIn(['outputs', 0, 'id']);
+                                    let inputs = self.get('inputs');
+                                    let left = getIOByTitle(inputs, 'A').get('value');
+                                    let right = getIOByTitle(inputs, 'B').get('value');
+                                    let outputId = getIOByTitle(self.get('outputs'), 'C').get('id');
                                     let sum = left + right;
                                     yield put(update(id, outputId, 'outputs', sum));
                                     yield put(broadcast(id, outputId, sum));
@@ -81,16 +83,17 @@ export default fromJS({
                 {
                     title: 'Product',
                     body: (inputs, outputs) =>
-                        `∏(${inputs.getIn([0, 'value'])}, ${inputs.getIn([1, 'value'])} = ${outputs.getIn([0, 'value'])})`,
+                        `∏(${inputs.map((input) => input.get('value')).join(', ')} = ${outputs.reduce((acc, input) => acc + input.get('value'), 0)})`,
                     events: (id, selector, update, broadcast) => createSagas(id, selector, update, broadcast)
-                        .set('update', function* (){
+                        .set('update', function*() {
                             while (true) {
                                 let {nodeId} = yield take(NODE_UPDATE);
                                 if (nodeId === id) {
                                     let self = yield select(selector);
-                                    let left = self.getIn(['inputs', 0, 'value']);
-                                    let right = self.getIn(['inputs', 1, 'value']);
-                                    let outputId = self.getIn(['outputs', 0, 'id']);
+                                    let inputs = self.get('inputs');
+                                    let left = getIOByTitle(inputs, 'A').get('value');
+                                    let right = getIOByTitle(inputs, 'B').get('value');
+                                    let outputId = getIOByTitle(self.get('outputs'), 'C').get('id');
                                     let prod = left * right;
                                     yield put(update(id, outputId, 'outputs', prod));
                                     yield put(broadcast(id, outputId, prod));
@@ -128,16 +131,15 @@ export default fromJS({
                 {
                     title: 'Counter',
                     body: (inputs, outputs) =>
-                        `Delay: ${inputs.getIn([0,'value'])}, Count: ${outputs.getIn([0,'value'])}`,
+                        `Delay: ${getIOByTitle(inputs, 'Delay').get('value')}, Count: ${getIOByTitle(outputs, 'Count').get('value')}`,
                     events: (id, selector, update, broadcast) => createSagas(id, selector, update, broadcast)
                         .set('main', function *() {
-                            let self = yield select(selector);
-                            let outputId = self.getIn(['outputs', 0, 'id']);
                             while (true) {
                                 let self = yield select(selector);
-                                let d = self.getIn(['inputs', 0, 'value']);
+                                let d = getIOByTitle(self.get('inputs'), 'Delay').get('value');
                                 yield call(delay, d);
-                                let nextCount = self.getIn(['outputs', 0, 'value']) + 1;
+                                let outputId = getIOByTitle(self.get('outputs'), 'Count').get('id');
+                                let nextCount = getIOByTitle(self.get('outputs'), 'Count').get('value') + 1;
                                 yield put(update(id, outputId, 'outputs', nextCount));
                                 yield put(broadcast(id, outputId, nextCount));
 
