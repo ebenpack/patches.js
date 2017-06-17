@@ -43,13 +43,15 @@ const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) =
             </text>
             <text
                 className="title"
-                x="0"
-                y="0"
+                x="4"
+                y="4"
                 alignmentBaseline="hanging">{title}</text>
             <text
                 className="body"
                 alignmentBaseline="hanging"
-                y={height * 0.2}>{bodyText}</text>
+                y={(height * 0.2) + 4}
+                x="4">
+                {bodyText}</text>
             {inputs.map((input, index) =>
                 <g className="input" key={input.get('id')}>
                     <circle
@@ -63,7 +65,7 @@ const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) =
                     </circle>
                     <text
                         x={input.get('offsetLeft') + 5}
-                        y={input.get('offsetTop')}
+                        y={input.get('offsetTop') + 5}
                     >{input.get('title')}</text>
                 </g>
             )}
@@ -79,7 +81,7 @@ const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) =
                     </circle>
                     <text
                         x={output.get('offsetLeft') - 5}
-                        y={output.get('offsetTop')}
+                        y={output.get('offsetTop') + 5}
                         textAnchor="end"
                     >{output.get('title')}</text>
                 </g>

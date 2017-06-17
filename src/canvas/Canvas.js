@@ -19,10 +19,11 @@ const Connection = ({connection}) => {
 
         return `M${x0} ${y0} C${mx} ${y0} ${mx} ${y1} ${x1} ${y1}`;
     }
+
     return (
         <path
             className="patch"
-            d={bezierByH(x1,y1,x2,y2)}
+            d={bezierByH(x1, y1, x2, y2)}
             strokeWidth="4"/>
     );
 };
@@ -33,6 +34,11 @@ const Canvas = ({nodes, xpos, ypos, scale}) => (
         <svg
             width="100%" height="100%"
             xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="dropshadow">
+                    <feDropShadow dx="4" dy="4" stdDeviation="4"/>
+                </filter>
+            </defs>
             {nodes.map((node) => {
                     let connected = node.get('connected');
                     if (node.has('tempConnect')) {

@@ -40,7 +40,7 @@ body {
 }
 .node {
     fill: #50607e;
-    box-shadow: -1px 5px 13px 1px rgba(30,30,30,0.8);
+    filter: url('#dropshadow');
     border-color: rgba(255,255,255,0.4);
 }
 .node .input, .node .output {
