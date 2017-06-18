@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
-import nodeTypes from '../nodes/nodeTypes';
+import nodeTypes from '../nodes/nodes/index';
 import {addNode} from '../nodes/actions';
 
 const Controls = ({nodeTypes, addNode}) => {

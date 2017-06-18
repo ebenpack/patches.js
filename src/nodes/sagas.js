@@ -82,9 +82,9 @@ function* watchDrag() {
                         let toNodeId = attempt.nodeId;
                         let toIOId = attempt.inputId;
                         let nodes = yield select((store) => store.get('nodes'));
-                        let output = yield select((store)=>
+                        let output = yield select((store) =>
                             nodes.getIn([fromNodeId, 'outputs', fromIOId,]));
-                        let input = yield select((store)=>
+                        let input = yield select((store) =>
                             nodes.getIn([toNodeId, 'inputs', toIOId]));
                         if (input.get('type') === output.get('type')) {
                             yield put(addConnectionToStore(toNodeId, toIOId, fromNodeId, fromIOId));
@@ -103,9 +103,10 @@ const positionIO = (count, index) => {
     return increment * (index + 1);
 };
 
-const calculateTopOffset = (height, bodyPercentage, count, index) =>
-(height * (1 - bodyPercentage)) +
-(height * bodyPercentage) * positionIO(count, index);
+const calculateTopOffset = (height, bodyPercentage, count, index) => (
+    (height * (1 - bodyPercentage)) +
+    (height * bodyPercentage) * positionIO(count, index)
+);
 
 function* watchAdd() {
     const running = {};
@@ -135,8 +136,8 @@ function* watchAdd() {
                 let id = yield call(uuid);
                 output = output.set('id', id)
                     .set('offsetTop',
-                    calculateTopOffset(node.get('height'), 0.8, node.get('outputs').size, i)
-                ).set('offsetLeft', node.get('width'));
+                        calculateTopOffset(node.get('height'), 0.8, node.get('outputs').size, i)
+                    ).set('offsetLeft', node.get('width'));
                 outputs = outputs.set(id, output)
             }
             node = node.set('outputs', outputs);

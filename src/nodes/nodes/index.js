@@ -1,4 +1,4 @@
-import {fromJS} from 'immutable';
+import {List, Map, fromJS} from 'immutable';
 import {put, select, takeEvery} from 'redux-saga/effects';
 
 import mathNodes from './math';
@@ -31,7 +31,7 @@ export const createSagas = (id, selector, update, broadcast) => fromJS({
 export const getIOByTitle = (IO, title) =>
     IO.find((io) => io.get('title') === title);
 
-export default fromJS([
+export default Map().set('groups', List([
     mathNodes,
     generatorNodes
-]);
+]));
