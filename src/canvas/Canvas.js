@@ -39,7 +39,7 @@ const Canvas = ({nodes, xpos, ypos, scale}) => (
                     <feDropShadow dx="4" dy="4" stdDeviation="4"/>
                 </filter>
             </defs>
-            {nodes.map((node) => {
+            {nodes.valueSeq().map((node) => {
                     let connected = node.get('connected');
                     if (node.has('tempConnect')) {
                         connected = connected.push(node.get('tempConnect'));
@@ -49,7 +49,7 @@ const Canvas = ({nodes, xpos, ypos, scale}) => (
                     )
                 }
             )}
-            {nodes.map((node) =>
+            {nodes.valueSeq().map((node) =>
                 <Node node={node} key={node.get('id')}/>
             )}
 
