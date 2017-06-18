@@ -39,7 +39,6 @@ const moveNode = (node, left, top, nodes) => {
 };
 
 const nodesReducer = (state = defaultState, action) => {
-    let index = 0;
     let path = null;
     let node = null;
     switch (action.type) {
@@ -47,7 +46,13 @@ const nodesReducer = (state = defaultState, action) => {
             node = state.get(action.id);
             return state.delete(action.id).set(action.id, node);
         case NODE_REMOVE_FROM_STORE:
-            return state.delete(action.id);
+            return state
+                .delete(action.id)
+                .map((node)=>
+                    node.update('connected', (connected)=>
+                        connected.filterNot((connected)=>connected.get('fromNodeId')===action.id)
+                    )
+                );
         case NODE_ADD_TO_STORE:
             node = moveNode(action.node, 0, 0, state);
             return state.set(node.get('id'), node);
