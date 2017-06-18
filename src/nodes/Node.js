@@ -52,7 +52,7 @@ const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) =
                 y={(height * 0.2) + 4}
                 x="4">
                 {bodyText}</text>
-            {inputs.map((input, index) =>
+            {inputs.valueSeq().map((input, index) =>
                 <g className="input" key={input.get('id')}>
                     <circle
                         cx={ input.get('offsetLeft')}
@@ -69,7 +69,7 @@ const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) =
                     >{input.get('title')}</text>
                 </g>
             )}
-            {outputs.map((output, index) =>
+            {outputs.valueSeq().map((output, index) =>
                 <g className="output" key={output.get('id')}>
                     <circle
                         cx={ output.get('offsetLeft')}
