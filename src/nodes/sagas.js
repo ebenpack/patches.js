@@ -6,6 +6,7 @@ import {
     addNodeToStore, nodeDragEnd, nodeDrag, moveNodeToTop, updateIO, broadcast, removeNodeFromStore,
     addConnectionToStore, connectEnd, connectDrag
 } from './actions';
+import {getIOPath} from './selectors';
 import {uuid, createMouseChannel} from '../utils';
 
 function* watchDrag() {
@@ -62,7 +63,15 @@ function* watchDrag() {
                         let input = yield select((store) =>
                             nodes.getIn([toNodeId, 'inputs', toIOId]));
                         if (input.get('type') === output.get('type')) {
+                            // Connect
                             yield put(addConnectionToStore(toNodeId, toIOId, fromNodeId, fromIOId));
+                            // Update value
+                            let value = yield select((store) => 
+                                store.getIn(
+                                    ['nodes'].concat(getIOPath(fromNodeId, fromIOId, 'outputs')).concat(['value'])
+                                )
+                            );
+                            yield put(broadcast(fromNodeId, fromIOId, value));
                         }
                     }
                     yield put(connectEnd(nodeId));

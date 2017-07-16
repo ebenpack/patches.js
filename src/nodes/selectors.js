@@ -13,6 +13,4 @@ export const getNodePath = (state, nodeId) => {
     }
 };
 
-export const getIOPath = (state, nodeId, IOId, path) => {
-    return [index, path, IOIndex];
-};
+export const getIOPath = (nodeId, IOId, path) => [nodeId, path, IOId];
