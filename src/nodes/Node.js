@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
-import {removeNode, nodeDragStart, connectStart, connectAttempt} from './actions';
+import {removeNode, nodeDragStart, connectStart, connectAttempt, widgetUpdate} from './actions';
 
-const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) => {
+const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt, widgetUpdate}) => {
     const title = node.get('title');
     const body = node.get('body');
     const left = node.get('left');
@@ -16,6 +16,8 @@ const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) =
     const id = node.get('id');
     const transform = `translate(${left}, ${top})`;
     const bodyText = body(inputs, outputs);
+    const Widgets = node.get('widgets');
+    const state = node.get('state');
     return (
         <g transform={transform} className="node draggable">
             <rect
@@ -51,7 +53,9 @@ const Node = ({node, removeNode, nodeDragStart, connectStart, connectAttempt}) =
                 alignmentBaseline="hanging"
                 y={(height * 0.2) + 4}
                 x="4">
-                {bodyText}</text>
+                {bodyText}
+            </text>
+            {Widgets ? <g>{Widgets.map((W, index) => <W inputs={inputs} outputs={outputs} state={state} update={widgetUpdate.bind(null, id)} key={index} />)}</g> : null}
             {inputs.valueSeq().map((input, index) =>
                 <g className="input" key={input.get('id')}>
                     <circle
@@ -98,7 +102,8 @@ const mapDispatchToProps = {
     removeNode,
     nodeDragStart,
     connectStart,
-    connectAttempt
+    connectAttempt,
+    widgetUpdate
 };
 
 export default connect(

@@ -13,7 +13,6 @@ export const NODE_DRAG_START = 'NODE_DRAG_START';
 export const NODE_DRAG = 'NODE_DRAG';
 export const NODE_DRAG_END = 'NODE_DRAG_END';
 
-
 export const NODE_CONNECT = 'NODE_CONNECT';
 export const NODE_CONNECT_START = 'NODE_CONNECT_START';
 export const NODE_CONNECT_DRAG = 'NODE_CONNECT_DRAG';
@@ -23,6 +22,8 @@ export const NODE_CONNECT_ACCEPT = 'NODE_CONNECT_ACCEPT';
 export const NODE_CONNECT_REJECT = 'NODE_CONNECT_REJECT';
 
 export const NODE_CONNECT_ADD_TO_STORE = 'NODE_CONNECT_ADD_TO_STORE';
+
+export const WIDGET_UPDATE = 'WIDGET_UPDATE';
 
 export const nodeDragStart = (id, startX, startY) => ({
     type: NODE_DRAG_START,
@@ -78,6 +79,12 @@ export const updateIO = (nodeId, IOId, path, value) => ({
     nodeId,
     IOId,
     path,
+    value
+});
+
+export const widgetUpdate = (nodeId, value) => ({
+    type: WIDGET_UPDATE,
+    nodeId,
     value
 });
 
