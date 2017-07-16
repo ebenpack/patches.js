@@ -6,32 +6,7 @@ import {
     addNodeToStore, nodeDragEnd, nodeDrag, moveNodeToTop, updateIO, broadcast, removeNodeFromStore,
     addConnectionToStore, connectEnd, connectDrag
 } from './actions';
-import {uuid} from '../utils';
-
-export const createMouseChannel = () =>
-    eventChannel(emit => {
-
-        const mouseUpListener = (e) => emit({
-            type: 'END'
-        });
-
-        const mouseDownListener = (e) => emit({
-            type: 'MOVE',
-            x: e.pageX,
-            y: e.pageY
-        });
-
-        document.addEventListener('mouseup', mouseUpListener);
-        document.addEventListener('mousemove', mouseDownListener);
-
-        const unsubscribe = () => {
-            document.removeEventListener('mouseup', mouseUpListener);
-            document.removeEventListener('mousemove', mouseDownListener);
-        };
-
-        return unsubscribe
-    });
-
+import {uuid, createMouseChannel} from '../utils';
 
 function* watchDrag() {
     const mouseChannel = yield call(createMouseChannel);
@@ -120,6 +95,8 @@ function* watchAdd() {
             let {node} = add;
             let id = yield call(uuid);
             node = node.set('id', id);
+
+            // Input
             let inputs = OrderedMap();
             for (let i = 0; i < node.get('inputs').size; i++) {
                 let id = yield call(uuid);
@@ -130,6 +107,18 @@ function* watchAdd() {
                 inputs = inputs.set(id, input);
             }
             node = node.set('inputs', inputs);
+
+            // State
+            let state = OrderedMap();
+            for (let i = 0; i < node.get('state').size; i++) {
+                let id = yield call(uuid);
+                let s = node.getIn(['state', i]);
+                s = s.set('id', id);
+                state = state.set(id, s);
+            }
+            node = node.set('state', state);
+
+            // Output
             let outputs = OrderedMap();
             for (let i = 0; i < node.get('outputs').size; i++) {
                 let output = node.getIn(['outputs', i]);
@@ -141,6 +130,7 @@ function* watchAdd() {
                 outputs = outputs.set(id, output)
             }
             node = node.set('outputs', outputs);
+
             node = node.set('left', 0).set('top', 0).set('connections', Set()).set('connected', List());
             yield put(addNodeToStore(node));
 
