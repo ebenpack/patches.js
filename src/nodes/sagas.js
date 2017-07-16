@@ -4,7 +4,7 @@ import {put, call, take, fork, race, select, cancel} from 'redux-saga/effects';
 import {
     NODE_DRAG_START, NODE_ADD, NODE_REMOVE, NODE_CONNECT_START, NODE_CONNECT_ATTEMPT,
     addNodeToStore, nodeDragEnd, nodeDrag, moveNodeToTop, updateIO, broadcast, removeNodeFromStore,
-    addConnectionToStore, connectEnd, connectDrag
+    addConnectionToStore, connectEnd, connectDrag, connectSuccess
 } from './actions';
 import {getIOPath} from './selectors';
 import {uuid, createMouseChannel} from '../utils';
@@ -64,6 +64,7 @@ function* watchDrag() {
                             nodes.getIn([toNodeId, 'inputs', toIOId]));
                         if (input.get('type') === output.get('type')) {
                             // Connect
+                            yield put(connectSuccess(toNodeId, toIOId, fromNodeId, fromIOId));
                             yield put(addConnectionToStore(toNodeId, toIOId, fromNodeId, fromIOId));
                             // Update value
                             yield put(broadcast(fromNodeId, fromIOId, output.get('value')));

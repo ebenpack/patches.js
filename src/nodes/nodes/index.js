@@ -3,6 +3,7 @@ import {put, select, takeEvery} from 'redux-saga/effects';
 
 import mathNodes from './math';
 import generatorNodes from './generators';
+import audioNodes from './audio';
 
 import {
     NODE_BROADCAST, NODE_CONNECT, NODE_UPDATE_IO, NODE_UPDATE,
@@ -32,6 +33,7 @@ export const getIOByTitle = (IO, title) =>
     IO.find((io) => io.get('title') === title);
 
 export default Map().set('groups', List([
+    audioNodes,
     mathNodes,
-    generatorNodes
+    generatorNodes,
 ]));
