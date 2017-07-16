@@ -20,7 +20,8 @@ class Slider extends React.Component {
         this.state = {
             x: 0,
             min: 0,
-            max: 180,
+            max: 1000,
+            width: 180,
             prevX: null,
             mouseDown: false,
             inputs, outputs, state, update
@@ -41,12 +42,12 @@ class Slider extends React.Component {
                 if (!prevX) {
                     prevX = e.pageX;
                 }
-                let x = clamp(this.state.x + (e.pageX - prevX), this.state.min, this.state.max);
+                let x = clamp(this.state.x + (e.pageX - prevX), 0, this.state.width);
                 this.setState({
                     x,
                     prevX: e.pageX,
                 });
-                this.update(x);
+                this.update(Math.round(this.state.max * (x / this.state.width)));
             }
         };
         this.handleMouseUp = (e) => {
