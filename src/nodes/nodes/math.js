@@ -31,6 +31,7 @@ const binaryConstructor = (title, operatorStr, operatorFn) => ({
         }),
     width: 180,
     height: 100,
+    state: [],
     inputs: [
         {
             title: 'A',
@@ -60,5 +61,6 @@ export default fromJS({
         binaryConstructor('Div', '÷', (a, b) => a / b),
         binaryConstructor('Prod', '∏', (a, b) => a * b),
         binaryConstructor('Sub', '-', (a, b) => a - b),
+        binaryConstructor('Exp', '**', (a, b) => Math.pow(a,b)),
     ],
 });
