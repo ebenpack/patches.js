@@ -20,6 +20,7 @@ export const NODE_CONNECT_END = 'NODE_CONNECT_END';
 export const NODE_CONNECT_ATTEMPT = 'NODE_CONNECT_ATTEMPT';
 export const NODE_CONNECT_ACCEPT = 'NODE_CONNECT_ACCEPT';
 export const NODE_CONNECT_REJECT = 'NODE_CONNECT_REJECT';
+export const NODE_CONNECT_SUCCESS = 'NODE_CONNECT_SUCCESS';
 
 export const NODE_CONNECT_ADD_TO_STORE = 'NODE_CONNECT_ADD_TO_STORE';
 
@@ -132,6 +133,15 @@ export const connectAttempt = (nodeId, inputId) =>({
 
 export const addConnectionToStore = (toNodeId, toIOId, fromNodeId, fromIOId) => ({
     type: NODE_CONNECT_ADD_TO_STORE,
+    toNodeId,
+    toIOId,
+    fromNodeId,
+    fromIOId
+});
+
+// TODO: Same as above
+export const connectSuccess = (toNodeId, toIOId, fromNodeId, fromIOId) => ({
+    type: NODE_CONNECT_SUCCESS,
     toNodeId,
     toIOId,
     fromNodeId,

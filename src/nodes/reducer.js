@@ -110,21 +110,33 @@ const nodesReducer = (state = defaultState, action) => {
             return state.deleteIn([action.nodeId, 'tempConnect']);
         case NODE_CONNECT_ADD_TO_STORE:
             // TODO: PREVENT CYCLES
-            state = state.updateIn([action.fromNodeId, 'connections'], (connections) => connections.add(fromJS({
-                fromNodeId: action.fromNodeId,
-                fromIOId: action.fromIOId,
-                toNodeId: action.toNodeId,
-                toIOId: action.toIOId,
-            })));
-            return state.update(action.toNodeId, (node) => {
-                node = node.update('connected', (connected) =>
-                    connected.push(fromJS({
-                        toNodeId: action.toNodeId,
-                        toIOId: action.toIOId,
+            state = state.map((node)=>
+                node.update('connections', (connected)=>
+                    connected.filter((connected)=>connected.get('toIOId')===action.toIOId)
+                )
+            );
+            state = state.updateIn([action.fromNodeId, 'connections'], (connections) =>
+                connections
+                    .add(fromJS({
                         fromNodeId: action.fromNodeId,
                         fromIOId: action.fromIOId,
+                        toNodeId: action.toNodeId,
+                        toIOId: action.toIOId,
                     }))
-                );
+            );
+            return state.update(action.toNodeId, (node) => {
+                node = node.update('connected', (connected) => {
+                    return connected
+                        .filterNot((c)=> // Only allow a single patch to connect to an input
+                            c.get('toIOId') === action.toIOId
+                        )
+                        .push(fromJS({
+                            toNodeId: action.toNodeId,
+                            toIOId: action.toIOId,
+                            fromNodeId: action.fromNodeId,
+                            fromIOId: action.fromIOId,
+                        }))
+                });
                 node = moveNode(node, node.get('left'), node.get('top'), state);
                 return node;
             });

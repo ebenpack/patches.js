@@ -66,12 +66,7 @@ function* watchDrag() {
                             // Connect
                             yield put(addConnectionToStore(toNodeId, toIOId, fromNodeId, fromIOId));
                             // Update value
-                            let value = yield select((store) => 
-                                store.getIn(
-                                    ['nodes'].concat(getIOPath(fromNodeId, fromIOId, 'outputs')).concat(['value'])
-                                )
-                            );
-                            yield put(broadcast(fromNodeId, fromIOId, value));
+                            yield put(broadcast(fromNodeId, fromIOId, output.get('value')));
                         }
                     }
                     yield put(connectEnd(nodeId));
