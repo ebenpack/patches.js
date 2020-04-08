@@ -1,39 +1,35 @@
 {
-  "name": "patches",
-  "description": "Patches",
-  "dependencies": {
-    "axios": "^0.16.1",
-    "immutable": "^3.8.1",
-    "prop-types": "^15.5.10",
-    "react": "^15.5.3",
-    "react-dom": "^15.5.3",
-    "react-redux": "^5.0.4",
-    "redux": "^3.6.0",
-    "redux-immutable": "^4.0.0",
-    "redux-saga": "^0.14.7"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.24.1",
-    "babel-loader": "^7.0.0",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "css-loader": "^0.28.0",
-    "node-sass": "^4.5.2",
-    "redux-devtools": "^3.3.2",
-    "sass-loader": "^6.0.3",
-    "source-map-loader": "^0.2.1",
-    "style-loader": "^0.16.1",
-    "webpack": "^2.4.1",
-    "webpack-dashboard": "^0.4.0",
-    "webpack-dev-server": "^2.4.4"
-  },
-  "scripts": {
-    "build:dev": "webpack --progress --colors --watch",
-    "build": "NODE_ENV=production webpack",
-    "sass": "sassc sass/react.scss > ../bookstack/static/bookstack/css/react.css",
-    "server:dev": "webpack-dashboard  -- webpack-dev-server --content-base ./build"
-  }
+    "name": "patches",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build:prod": "webpack --env.NODE_ENV=production",
+        "build": "webpack",
+        "build:watch": "webpack --watch",
+        "fmt": "prettier . --write",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ebenpack/patches.js.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ebenpack/patches.js/issues"
+    },
+    "homepage": "https://github.com/ebenpack/patches.js#readme",
+    "devDependencies": {
+        "@babel/cli": "^7.8.4",
+        "@babel/core": "^7.9.0",
+        "@babel/preset-env": "^7.9.0",
+        "@babel/preset-typescript": "^7.9.0",
+        "babel-loader": "^8.1.0",
+        "prettier": "^2.0.3",
+        "ts-loader": "^6.2.2",
+        "typescript": "^3.8.3",
+        "webpack": "^4.42.1",
+        "webpack-cli": "^3.3.11"
+    }
 }
