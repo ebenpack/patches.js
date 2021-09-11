@@ -6,7 +6,7 @@ module.exports = (env) => {
     const mode = isProduction ? "production" : "development";
     const devtool = isProduction ? false : "inline-source-map";
     return {
-        entry: "./src/index.ts",
+        entry: "./src/index.tsx",
         target: "web",
         mode,
         devtool,
